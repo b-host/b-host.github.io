@@ -60,52 +60,101 @@
 
     <!-- SCRIPT PARA GERAR QRCODE -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- criando QRCODE -->
-   <script>
-    function mostrarQR(dado, tipo = "none") {
-        const modal = document.getElementById("qrModal");
-        const qrContainer = document.getElementById("qrcode");
+    <!-- criando QRCODE e Botao de copiar-->
+<script>
+function mostrarQR(dado, tipo = "none") {
+    const modal = document.getElementById("qrModal");
+    const qrContainer = document.getElementById("qrcode");
 
-        modal.style.display = "block";
-        qrContainer.innerHTML = "";
+    modal.style.display = "block";
 
-        let payload = "";
+    let payload = "";
 
-        switch (tipo) {
-            case "btc":
-                // BIP21
-                payload = "bitcoin:" + dado;
-                break;
+    switch (tipo) {
+        case "btc":
+            payload = "bitcoin:" + dado;
+            break;
 
-            case "lightning":
-                // BOLT11 ou LNURL
-                payload = "lightning:" + dado;
-                break;
+        case "lightning":
+            payload = "lightning:" + dado;
+            break;
 
-            case "liquid":
-                // Liquid (L-BTC) via parâmetro asset (BIP21 estendido)
-                // ⚠️ Substitua pelo asset id correto da sua rede
-                payload = "bitcoin:" + dado + "?asset=6f0279e9ed52...";
-                break;
+        case "liquid":
+            payload = "bitcoin:" + dado + "?asset=6f0279e9ed52...";
+            break;
 
-            case "none":
-            default:
-                // QR fixo: usa exatamente o que foi passado
-                payload = dado;
-                break;
-        }
-
-        new QRCode(qrContainer, {
-            text: payload,
-            width: 300,
-            height: 300
-        });
+        default:
+            payload = dado;
     }
 
-    function fecharQR() {
-        document.getElementById("qrModal").style.display = "none";
+    // limpa conteúdo anterior
+    qrContainer.innerHTML = "";
+
+    // ===== QR CODE =====
+    const qrDiv = document.createElement("div");
+    qrContainer.appendChild(qrDiv);
+
+    new QRCode(qrDiv, {
+        text: payload,
+        width: 250,
+        height: 250
+    });
+
+    // ===== WRAPPER (Bootstrap) =====
+    const wrapper = document.createElement("div");
+    wrapper.className = "mt-3";
+
+    // ===== INPUT =====
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = dado; // mostra apenas o dado
+    input.readOnly = true;
+    input.className = "form-control text-center";
+    input.onclick = () => input.select();
+
+    // ===== BOTÃO PADRÃO LINKS =====
+    const botao = document.createElement("a");
+    botao.href = "#";
+    botao.className = "links hover d-flex align-items-center justify-content-center gap-2";
+    botao.style.marginTop = "10px";
+
+    botao.innerHTML = `
+        <i class="fas fa-copy links-in"></i>
+        <b>Copiar</b>
+    `;
+
+    botao.onclick = function (e) {
+        e.preventDefault();
+        copiarTexto(dado);
+    };
+
+    // adiciona elementos
+    wrapper.appendChild(input);
+    wrapper.appendChild(botao);
+    qrContainer.appendChild(wrapper);
+}
+
+// ===== FUNÇÃO DE CÓPIA =====
+function copiarTexto(texto) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(texto)
+            .then(() => console.log("Copiado"))
+            .catch(err => console.error(err));
+    } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = texto;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
     }
-    </script>
+}
+
+// ===== FECHAR MODAL =====
+function fecharQR() {
+    document.getElementById("qrModal").style.display = "none";
+}
+</script>
 
 
 
