@@ -58,27 +58,54 @@
     <script src="assets/scripts/js/particles.js"></script>
     <script src="assets/scripts/js/app.js"></script>
 
-    <!-- stats.js -->
-    <!-- <script src="assets/scripts/js/lib/stats.js"></script>
-    <script>
-    var count_particles, stats, update;
-    stats = new Stats;
-    stats.setMode(0);
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
-    document.body.appendChild(stats.domElement);
-    count_particles = document.querySelector('.js-count-particles');
-    update = function() {
-        stats.begin();
-        stats.end();
-        if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
-        count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+    <!-- SCRIPT PARA GERAR QRCODE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- criando QRCODE -->
+   <script>
+    function mostrarQR(dado, tipo = "none") {
+        const modal = document.getElementById("qrModal");
+        const qrContainer = document.getElementById("qrcode");
+
+        modal.style.display = "block";
+        qrContainer.innerHTML = "";
+
+        let payload = "";
+
+        switch (tipo) {
+            case "btc":
+                // BIP21
+                payload = "bitcoin:" + dado;
+                break;
+
+            case "lightning":
+                // BOLT11 ou LNURL
+                payload = "lightning:" + dado;
+                break;
+
+            case "liquid":
+                // Liquid (L-BTC) via parâmetro asset (BIP21 estendido)
+                // ⚠️ Substitua pelo asset id correto da sua rede
+                payload = "bitcoin:" + dado + "?asset=6f0279e9ed52...";
+                break;
+
+            case "none":
+            default:
+                // QR fixo: usa exatamente o que foi passado
+                payload = dado;
+                break;
         }
-        requestAnimationFrame(update);
-    };
-    requestAnimationFrame(update);
-    </script> -->
+
+        new QRCode(qrContainer, {
+            text: payload,
+            width: 300,
+            height: 300
+        });
+    }
+
+    function fecharQR() {
+        document.getElementById("qrModal").style.display = "none";
+    }
+    </script>
 
 
 
@@ -98,38 +125,74 @@
 
     <!-- Icons podem ser encontradas aqui: https://fontawesome.com/v4/icons/ -->
        
-    <a href="https://wa.me/5585999857583?text=Ola%2C%20pode%20me%20ajudar%3F" target="_blank" class="links , hover">
-        <i class="fab fa-whatsapp , links-in" style="color: #f6f5f4;"></i>
-        <b>WhatsApp</b></a>
+   <a href="https://wa.me/message/HYEVK35IB763O1" target="_blank" class="links hover">
+    <i class="fab fa-whatsapp links-in"></i>
+    <b>WhatsApp</b>
+</a>
 
-    <a href="https://t.me/bruno_ec" target="_blank" class="links , hover">
-        <i class="fab fa-telegram , links-in" style="color: #f6f5f4;"></i>
-        <b>Telegram</b></a>
-    
-    <a href="https://signal.me/#eu/4OvovSoVyflkzH-gplglgo6WAz07CIk9yodjdaDwRgMuCT8odhRCSK-Z7qSoCIwd" target="_blank" class="links , hover">
-        <i class="fab fa-signal-messenger , links-in" style="color: #f6f5f4;"></i>
-        <b>Signal</b></a>
+<a href="https://t.me/bruno_ec" target="_blank" class="links hover">
+    <i class="fab fa-telegram links-in"></i>
+    <b>Telegram</b>
+</a>
 
-     <a href="mailto:linhares.eng@proton.me" target="_blank" class="links , hover">
-        <i class="fa fa-envelope , links-in" style="color: #f6f5f4;"></i>
-        <b>E-mail</b></a>
+<a href="#" target="_blank" class="links hover">
+    <!-- Signal NÃO existe no FA5 -->
+    <i class="fas fa-comment-dots links-in"></i>
+    <b>Signal</b>
+</a>
 
-    <a href="https://www.linkedin.com/in/bblinhares/" target="_blank" class="links , hover">
-        <i class="fab fa-linkedin , links-in"></i>
-        <b>LinkedIn</b></a>
-        
-    
-    <!-- a href="https://github.com/b-host" target="_blank" class="links , hover">
-        <i class="fab fa-github , links-in"></i>
-        <b>GitHub</b></a>< -->
+<a href="mailto:linhares.eng@proton.me" target="_blank" class="links hover">
+    <i class="fas fa-envelope links-in"></i>
+    <b>E-mail</b>
+</a>
 
-    <!-- <a href="/assets/0x951F9C86CD3887F3_public.asc" target="_blank" class="links , hover">
-        <i class="fa-solid fa-key , links-in"></i>
-        <b>PublicKey</b></a> -->
+<a href="https://www.linkedin.com/in/bblinhares/" target="_blank" class="links hover">
+    <i class="fab fa-linkedin links-in"></i>
+    <b>LinkedIn</b>
+</a>
 
-    <a href="https://admin.dominipay.com.br/s/linhares-engenharia-diagnostica/85501dc3-ac9b-4f3f-aa5b-f07680900f9f" target="_blank" class="links , hover">
-        <i class="fa fa-shopping-cart , links-in"></i>
-        <b>Loja</b></a>
+<a href="https://admin.dominipay.com.br/s/linhares-engenharia-diagnostica/85501dc3-ac9b-4f3f-aa5b-f07680900f9f" target="_blank" class="links hover">
+    <i class="fas fa-shopping-cart links-in"></i>
+    <b>Loja</b>
+</a>
+
+<a href="https://pixgo.org/pay/8PC4Me1m0Brg" target="_blank" class="links hover">
+    <i class="fas fa-credit-card links-in"></i>
+    <b>Pague Aqui com Pix!</b>
+</a>
+
+<!-- BTC Onchain
+    <a href="#" onclick="mostrarQR('ola...', 'btc'); return false;" class="links hover">
+        <i class="fab fa-bitcoin links-in"></i>
+        <b>BTC</b>
+    </a> -->
+
+
+<!-- QRCODE qualquer
+    <a href="#" onclick="mostrarQR('teste'); return false;" class="links hover">
+        <i class="fab fa-bitcoin links-in"></i>
+        <b>QRCODE</b>
+    </a> -->
+
+<!-- BTC Liquid -->
+    <a href="#" onclick="mostrarQR('lq1qq2cj8wagt6arahw9p6ny2ksq7vw8yzs9wjxev24ug5qafvg7699ckcj4qwazmfpzxkt0j6xqrk69nsd03nnuu3eskpjfmzk87', 'liquid'); return false;" class="links hover">
+    <img src="assets/img/liquid.png" class="links-in" style="width:40px; height:40px;">
+    <b>BTC Liquid</b>
+</a>
+
+<!-- BTC lightning -->
+    <a href="#" onclick="mostrarQR('lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhqatdwpjkgetkv4hxjmn8xyms7mjmpf', 'lightning'); return false;" class="links hover">
+        <i class="fas fa-bolt links-in"></i>
+        <b>BTC Lightning</b>
+    </a>
+
+
+    <div id="qrModal" class="qr-modal">
+        <div class="qr-content">
+            <span onclick="fecharQR()" class="close">&times;</span>
+            <div id="qrcode"></div>
+        </div>
+    </div>
  
 
     <div class="space"></div>
